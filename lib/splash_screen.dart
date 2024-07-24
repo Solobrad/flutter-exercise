@@ -6,32 +6,44 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+
     _navigateToListScreen();
   }
 
   void _navigateToListScreen() async {
-    // Wait for the logo animation to complete
-    await Future.delayed(Duration(seconds: 2));
-    Get.offNamed('/list'); // Navigate to the list screen
+    await Future.delayed(
+        Duration(seconds: 2)); // Wait for the animation to complete
+    Get.offNamed('/list'); // Navigate to the ListScreen
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: AnimatedOpacity(
-          opacity: 1.0,
-          duration: Duration(seconds: 2),
+      body: FadeTransition(
+        opacity: _animation,
+        child: Center(
           child: FlutterLogo(size: 100),
-          onEnd: () {
-            _navigateToListScreen();
-          },
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

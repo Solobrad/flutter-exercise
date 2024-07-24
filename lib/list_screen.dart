@@ -14,9 +14,37 @@ class ListScreen extends StatelessWidget {
         if (_controller.isLoading.value && _controller.users.isEmpty) {
           return Center(child: CircularProgressIndicator());
         } else if (_controller.isError.value) {
-          return Center(child: Text('Error occurred. Please try again later.'));
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Error occurred. Please try again later.'),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    _controller.fetchUsers(); // Retry fetching data
+                  },
+                  child: Text('Retry'),
+                ),
+              ],
+            ),
+          );
         } else if (_controller.users.isEmpty) {
-          return Center(child: Text('No data available.'));
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('No data available.'),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    _controller.fetchUsers(); // Retry fetching data
+                  },
+                  child: Text('Retry'),
+                ),
+              ],
+            ),
+          );
         } else {
           return NotificationListener<ScrollNotification>(
             onNotification: (ScrollNotification scrollInfo) {
@@ -39,7 +67,11 @@ class ListScreen extends StatelessWidget {
                 return ListTile(
                   title:
                       Text('${user['name']['first']} ${user['name']['last']}'),
-                  subtitle: Text('DOB: ${user['dob']['date']}'),
+                  subtitle: Text(
+                    'DOB: ${user['dob']['date']}\nPhone: ${user['phone']}',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   trailing: Text(user['gender']),
                   onTap: () {
                     // Handle tap event
