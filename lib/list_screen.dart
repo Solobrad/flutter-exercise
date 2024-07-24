@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'list_controller.dart';
 
 class ListScreen extends StatelessWidget {
   @override
@@ -14,37 +15,9 @@ class ListScreen extends StatelessWidget {
         if (_controller.isLoading.value && _controller.users.isEmpty) {
           return Center(child: CircularProgressIndicator());
         } else if (_controller.isError.value) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Error occurred. Please try again later.'),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    _controller.fetchUsers(); // Retry fetching data
-                  },
-                  child: Text('Retry'),
-                ),
-              ],
-            ),
-          );
+          return Center(child: Text('Error occurred. Please try again later.'));
         } else if (_controller.users.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('No data available.'),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    _controller.fetchUsers(); // Retry fetching data
-                  },
-                  child: Text('Retry'),
-                ),
-              ],
-            ),
-          );
+          return Center(child: Text('No data available.'));
         } else {
           return NotificationListener<ScrollNotification>(
             onNotification: (ScrollNotification scrollInfo) {
